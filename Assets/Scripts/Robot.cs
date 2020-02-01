@@ -18,14 +18,23 @@ public class Robot : MonoBehaviour {
 
 	public int player;
 
-	private void Start() {
-		GetComponent<MeshRenderer>().material.color = Game.i.colours[player];
-		transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material.color = Game.i.colours[player];
+	public float theifCooldown;
+	private float theifCooldownCurrent;
 
+	private bool facingRight = false;
+	private bool wasGrounded = false;
+
+	private void Start() {
 		right = player == 1;
+		facingRight = !right;
+		theifCooldownCurrent = theifCooldown;
 	}
 
 	void Update() {
+		Animator anim = GetComponent<Animator>();
+
+		theifCooldownCurrent -= Time.deltaTime;
+
 		float magnetMove = right ? -magnetMoveSpeed * Time.deltaTime : magnetMoveSpeed * Time.deltaTime;
 		Transform pivot = transform.GetChild(0);
 
@@ -51,14 +60,41 @@ public class Robot : MonoBehaviour {
 		Vector2 targetVelocity = new Vector2(x * moveSpeed, rb.velocity.y);
 		rb.velocity = Vector2.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing);
 
-		if (jump && Physics2D.OverlapCircle(groundCheckOrigin.position, groundCheckRadius, 1 << 8) != null) {
-			rb.AddForce(new Vector2(0, jumpForce));
+		if (x != 0) {
+			anim.SetBool("isRunning", true);
+		} else {
+			anim.SetBool("isRunning", false);
+		}
+
+		//if (x > 0 && !facingRight) {
+		//	transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+		//	facingRight = true;
+		//} else if (x < 0 && facingRight) {
+		//	transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+		//	facingRight = false;
+		//}
+
+		if (Physics2D.OverlapCircle(groundCheckOrigin.position, groundCheckRadius, 1 << 8) != null) {
+			Debug.Log("yo");
+			if (!wasGrounded) {
+				anim.SetBool("isJumping", false);
+				anim.Play("Idle");
+				Debug.Log("hello");
+			}
+			wasGrounded = true;
+
+			if (jump) {
+				rb.AddForce(new Vector2(0, jumpForce));
+				anim.SetBool("isJumping", true);
+			}
+		} else {
+			wasGrounded = false;
 		}
 
 		if (held != null && Input.GetButtonUp("Submit" + player)) {
 			held.transform.parent = null;
 			Rigidbody2D heldRb = held.gameObject.AddComponent<Rigidbody2D>();
-			held.gameObject.AddComponent<CircleCollider2D>();
+			//held.gameObject.AddComponent<CircleCollider2D>();
 
 			if (heldRb != null) {
 				Vector2 direction = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
@@ -66,14 +102,16 @@ public class Robot : MonoBehaviour {
 			}
 
 			held.thrower = player;
+			held.gameObject.layer = 10;
 			
 			held = null;
 		}
 
-		if (transform.position.x < -Game.i.screenEdge || transform.position.x > Game.i.screenEdge || transform.position.y < Game.i.bottomEdge) {
+		if (transform.position.x < -Game.i.screenEdge || transform.position.x > Game.i.screenEdge || transform.position.y < Game.i.bottomEdge || transform.position.y > 1000) {
 			Vector2 pos = transform.position;
 			pos.y = Game.i.topEdge;
 			pos.x = Random.Range(-Game.i.screenEdge*0.8f, Game.i.screenEdge*0.8f);
+			rb.velocity = Vector2.zero;
 
 			transform.position = pos;
 		}
@@ -82,32 +120,30 @@ public class Robot : MonoBehaviour {
 	private void OnCollisionStay2D(Collision2D collision) {
 		Part part = collision.collider.GetComponent<Part>();
 
-		if (part != null && held == null && Input.GetButton("Submit" + player)) {
-			if (part.transform.parent != null) {
-				part.transform.parent.parent.GetComponent<Robot>().held = null;
-			}
-			part.transform.parent = transform.GetChild(0);
-			part.transform.localPosition = new Vector2(0, 2);
-
-			Destroy(part.GetComponent<Rigidbody2D>());
-			Destroy(part.GetComponent<CircleCollider2D>());
-			held = part;
-		} 
+		Collide(part);
 	}
 
 	private void OnTriggerStay2D(Collider2D collider) {
 		Part part = collider.GetComponent<Part>();
 
+		Collide(part);
+	}
+
+	private void Collide(Part part) {
 		if (part != null && held == null && Input.GetButton("Submit" + player)) {
 			if (part.transform.parent != null) {
-				part.transform.parent.parent.GetComponent<Robot>().held = null;
+				if (theifCooldownCurrent < 0) {
+					part.transform.parent.parent.GetComponent<Robot>().held = null;
+					theifCooldownCurrent = 1;
+				} else return;
 			}
 			part.transform.parent = transform.GetChild(0);
 			part.transform.localPosition = new Vector2(0, 2);
 
 			Destroy(part.GetComponent<Rigidbody2D>());
-			Destroy(part.GetComponent<CircleCollider2D>());
+			//Destroy(part.GetComponent<CircleCollider2D>());
 			held = part;
+			held.gameObject.layer = 11;
 		}
 	}
 }

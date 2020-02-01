@@ -28,4 +28,10 @@ public class Part : MonoBehaviour {
 
 		transform.position = pos;
 	}
+
+	private void OnCollisionEnter2D(Collision2D collision) {
+		Rigidbody2D rb = GetComponent<Rigidbody2D>();
+
+		//rb.velocity = collision.GetContact(0).normal * rb.velocity.magnitude * 10;
+	}
 }
