@@ -8,9 +8,10 @@ public class Head : MonoBehaviour {
 		Part part = collision.GetComponent<Part>();
 
 		if (part != null) {
-			if (part.GetComponent<Rigidbody2D>().velocity.y < 0) {
+			if (part.GetComponent<Rigidbody2D>().velocity.y < 0 && part.player == part.thrower) {
 				Game.scores[part.player]++;
-				Destroy(part.gameObject);
+
+				part.Respawn();
 			}
 		}
 	}

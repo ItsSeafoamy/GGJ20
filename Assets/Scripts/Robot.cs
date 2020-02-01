@@ -21,6 +21,8 @@ public class Robot : MonoBehaviour {
 	private void Start() {
 		GetComponent<MeshRenderer>().material.color = Game.i.colours[player];
 		transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material.color = Game.i.colours[player];
+
+		right = player == 1;
 	}
 
 	void Update() {
@@ -62,6 +64,8 @@ public class Robot : MonoBehaviour {
 				Vector2 direction = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
 				heldRb.AddForce(direction * (right ? throwForce : -throwForce));
 			}
+
+			held.thrower = player;
 			
 			held = null;
 		}
