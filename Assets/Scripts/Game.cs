@@ -14,8 +14,17 @@ public class Game : MonoBehaviour {
 	public float topEdge, bottomEdge;
 	public float middleZone;
 
+	[System.NonSerialized] public float timer;
+	public float preGameTime;
+
 	private void Start() {
 		i = this;
+
+		timer = preGameTime;
+	}
+
+	private void Update() {
+		timer -= Time.deltaTime;
 	}
 
 	//private void OnGUI() {

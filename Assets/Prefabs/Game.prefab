@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8059029958369993384
+--- !u!1 &5661332243886713829
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,8 +8,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8059029958369993398}
-  - component: {fileID: 8059029958369993399}
+  - component: {fileID: 5661332243886713831}
+  - component: {fileID: 5661332243886713830}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -17,13 +17,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8059029958369993398
+--- !u!4 &5661332243886713831
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8059029958369993384}
+  m_GameObject: {fileID: 5661332243886713829}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.6260054, y: -0.15097408, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -31,24 +31,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8059029958369993399
+--- !u!114 &5661332243886713830
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8059029958369993384}
+  m_GameObject: {fileID: 5661332243886713829}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d4940692245c4644985de50ccf0a5e04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skin: {fileID: 11400000, guid: 7cfbe656aaf413e45851c8cfb7c53bc0, type: 2}
-  rightAlign: {fileID: 11400000, guid: 0ae62f73b95c81c4ba728c4d3e72ae8d, type: 2}
+  skin: {fileID: 0}
+  rightAlign: {fileID: 0}
   colours:
   - {r: 0, g: 1, b: 1, a: 1}
   - {r: 1, g: 0.652, b: 0, a: 1}
-  screenEdge: 10
+  screenEdge: 15
   topEdge: 10
   bottomEdge: -10
   middleZone: 1
+  preGameTime: 4

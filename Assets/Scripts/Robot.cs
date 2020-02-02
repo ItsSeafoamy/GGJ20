@@ -106,7 +106,7 @@ public class Robot : MonoBehaviour {
 			held = null;
 		}
 
-		if (transform.position.x < -Game.i.screenEdge || transform.position.x > Game.i.screenEdge || transform.position.y < Game.i.bottomEdge || transform.position.y > 1000) {
+		if (transform.position.x < -Game.i.screenEdge || transform.position.x > Game.i.screenEdge || transform.position.y < Game.i.bottomEdge) {
 			Vector2 pos = transform.position;
 			pos.y = Game.i.topEdge;
 			pos.x = Random.Range(-Game.i.screenEdge*0.8f, Game.i.screenEdge*0.8f);
@@ -114,18 +114,30 @@ public class Robot : MonoBehaviour {
 
 			transform.position = pos;
 		}
+
+		if (transform.position.y > 200 && transform.position.y > Game.i.topEdge && rb.velocity.y > 0) {
+			rb.velocity = new Vector2(rb.velocity.x, 0);
+		}
 	}
 
 	private void OnCollisionStay2D(Collision2D collision) {
 		Part part = collision.collider.GetComponent<Part>();
 
-		Collide(part);
+		if (part != null) {
+			Collide(part);
+		} else {
+			Collide(collision.collider.GetComponentInParent<Part>());
+		}
 	}
 
 	private void OnTriggerStay2D(Collider2D collider) {
 		Part part = collider.GetComponent<Part>();
 
-		Collide(part);
+		if (part != null) {
+			Collide(part);
+		} else {
+			Collide(collider.GetComponentInParent<Part>());
+		}
 	}
 
 	private void Collide(Part part) {

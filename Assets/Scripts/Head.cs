@@ -9,6 +9,34 @@ public class Head : MonoBehaviour {
 
 	public GameObject[] blueBattery, orangeBattery;
 
+	public Part[] toSpawn;
+	public float spawnTime;
+	private float currentSpawnTime;
+	private int numberSpawned;
+	public float spawnAngle, spawnForce;
+
+	public bool respawnParts = false;
+
+	private void Update() {
+		currentSpawnTime += Time.deltaTime;
+
+		for (int x = 0; x < toSpawn.Length; x++) {
+			float timeToSpawn = spawnTime/toSpawn.Length*x;
+
+			if (currentSpawnTime > timeToSpawn && numberSpawned <= x) {
+				Part spawned = Instantiate<Part>(toSpawn[x], transform.position, Quaternion.identity);
+				Rigidbody2D rb = spawned.GetComponent<Rigidbody2D>();
+
+				float angle = Random.Range(-spawnAngle, spawnAngle)+90;
+				Vector2 dir = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
+				Debug.Log(dir);
+
+				rb.AddForce(dir * spawnForce);
+				numberSpawned++;
+			}
+		}
+	}
+
 	private void OnTriggerEnter2D(Collider2D collision) {
 		Part part = collision.GetComponent<Part>();
 
@@ -32,7 +60,11 @@ public class Head : MonoBehaviour {
 					//End Game
 				}
 
-				part.Respawn();
+				if (respawnParts) {
+					part.Respawn();
+				} else {
+					Destroy(part.gameObject);
+				}
 			}
 		}
 	}
