@@ -8,7 +8,7 @@ public class Part : MonoBehaviour {
 	public int thrower;
 
 	private void Start() {
-		GetComponent<MeshRenderer>().material.color = Game.i.colours[player];
+		GetComponent<SpriteRenderer>().material.color = Game.i.colours[player];
 	}
 
 	private void Update() {
