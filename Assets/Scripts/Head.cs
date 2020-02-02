@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class Head : MonoBehaviour {
 
-	public ParticleSystem particles;
+	public ParticleSystem blueParticles, orangeParticles;
 	public bool scoreFromAbove, scoreFromRight, scoreFromBottom, scoreFromLeft;
+
+	public GameObject[] blueBattery, orangeBattery;
 
 	private void OnTriggerEnter2D(Collider2D collision) {
 		Part part = collision.GetComponent<Part>();
@@ -16,8 +18,19 @@ public class Head : MonoBehaviour {
 				|| (part.GetComponent<Rigidbody2D>().velocity.y > 0 && part.player == part.thrower && scoreFromBottom)
 				|| (part.GetComponent<Rigidbody2D>().velocity.x > 0 && part.player == part.thrower && scoreFromLeft)) {
 
+				if (part.player == 0) {
+					blueParticles.Play();
+					blueBattery[Game.scores[part.player]].SetActive(true);
+				} else if (part.player == 1) {
+					orangeParticles.Play();
+					orangeBattery[Game.scores[part.player]].SetActive(true);
+				}
+
 				Game.scores[part.player]++;
-				particles.Play();
+
+				if (Game.scores[part.player] >= blueBattery.Length) {
+					//End Game
+				}
 
 				part.Respawn();
 			}

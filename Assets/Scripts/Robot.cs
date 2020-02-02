@@ -75,7 +75,6 @@ public class Robot : MonoBehaviour {
 		//}
 
 		if (Physics2D.OverlapCircle(groundCheckOrigin.position, groundCheckRadius, 1 << 8) != null) {
-			Debug.Log("yo");
 			if (!wasGrounded) {
 				anim.SetBool("isJumping", false);
 				anim.Play("Idle");
@@ -91,7 +90,7 @@ public class Robot : MonoBehaviour {
 			wasGrounded = false;
 		}
 
-		if (held != null && Input.GetButtonUp("Submit" + player)) {
+		if (held != null && Input.GetAxis("Submit" + player) < 0.1f) {
 			held.transform.parent = null;
 			Rigidbody2D heldRb = held.gameObject.AddComponent<Rigidbody2D>();
 			//held.gameObject.AddComponent<CircleCollider2D>();
@@ -130,7 +129,7 @@ public class Robot : MonoBehaviour {
 	}
 
 	private void Collide(Part part) {
-		if (part != null && held == null && Input.GetButton("Submit" + player)) {
+		if (part != null && held == null && Input.GetAxis("Submit" + player) > 0.1f) {
 			if (part.transform.parent != null) {
 				if (theifCooldownCurrent < 0) {
 					part.transform.parent.parent.GetComponent<Robot>().held = null;
