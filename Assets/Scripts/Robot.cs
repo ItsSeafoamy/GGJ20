@@ -85,12 +85,13 @@ public class Robot : MonoBehaviour {
 			if (jump) {
 				rb.AddForce(new Vector2(0, jumpForce));
 				anim.SetBool("isJumping", true);
+				GetComponent<AudioSource>().Play();
 			}
 		} else {
 			wasGrounded = false;
 		}
 
-		if (held != null && Input.GetAxis("Submit" + player) < 0.1f) {
+		if (held != null && (Input.GetAxis("Submit" + player) < 0.1f) || (Input.GetButtonUp("Submit" + player))) {
 			held.transform.parent = null;
 			Rigidbody2D heldRb = held.gameObject.AddComponent<Rigidbody2D>();
 			//held.gameObject.AddComponent<CircleCollider2D>();
@@ -102,7 +103,8 @@ public class Robot : MonoBehaviour {
 
 			held.thrower = player;
 			held.gameObject.layer = 10;
-			
+			held.GetComponent<CircleCollider2D>().isTrigger = false;
+
 			held = null;
 		}
 
@@ -140,8 +142,8 @@ public class Robot : MonoBehaviour {
 		}
 	}
 
-	private void Collide(Part part) {
-		if (part != null && held == null && Input.GetAxis("Submit" + player) > 0.1f) {
+	public void Collide(Part part) {
+		if (part != null && held == null && (Input.GetAxis("Submit" + player) > 0.1f || Input.GetButton("Submit" + player))) {
 			if (part.transform.parent != null) {
 				if (theifCooldownCurrent < 0) {
 					part.transform.parent.parent.GetComponent<Robot>().held = null;
@@ -155,6 +157,9 @@ public class Robot : MonoBehaviour {
 			//Destroy(part.GetComponent<CircleCollider2D>());
 			held = part;
 			held.gameObject.layer = 11;
+			held.GetComponent<CircleCollider2D>().isTrigger = true;
+
+			transform.GetChild(0).GetComponent<AudioSource>().Play();
 		}
 	}
 }

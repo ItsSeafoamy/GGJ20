@@ -29,7 +29,13 @@ public class Part : MonoBehaviour {
 		transform.position = pos;
 	}
 
-	private void OnCollisionEnter2D(Collision2D collision) {
-		Rigidbody2D rb = GetComponent<Rigidbody2D>();
+	private void OnTriggerStay2D(Collider2D collider) {
+		Robot robot = collider.GetComponent<Robot>();
+
+		if (robot != null) {
+			robot.Collide(this);
+		} else {
+			collider.GetComponentInParent<Robot>().Collide(this);
+		}
 	}
 }

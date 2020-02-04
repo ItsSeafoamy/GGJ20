@@ -12,6 +12,8 @@ public class JumpPad : MonoBehaviour {
 		if (robot != null) {
 			robot.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, force));
 			robot.GetComponent<Animator>().SetBool("isJumping", true);
+
+			GetComponent<AudioSource>().Play();
 		}
 	}
 }

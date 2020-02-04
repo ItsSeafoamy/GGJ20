@@ -6,6 +6,7 @@ public class Game : MonoBehaviour {
 
 	public static Game i;
 	public static int[] scores = new int[] {0, 0};
+	public static int winner;
 
 	public GUISkin skin, rightAlign;
 
@@ -19,6 +20,8 @@ public class Game : MonoBehaviour {
 
 	private void Start() {
 		i = this;
+
+		scores = new int[] { 0, 0 };
 
 		timer = preGameTime;
 	}

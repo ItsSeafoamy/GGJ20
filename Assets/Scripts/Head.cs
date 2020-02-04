@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Head : MonoBehaviour {
 
@@ -24,7 +25,7 @@ public class Head : MonoBehaviour {
 			float timeToSpawn = spawnTime/toSpawn.Length*x;
 
 			if (currentSpawnTime > timeToSpawn && numberSpawned <= x) {
-				Part spawned = Instantiate<Part>(toSpawn[x], transform.position, Quaternion.identity);
+				Part spawned = Instantiate<Part>(toSpawn[x], new Vector3(transform.position.x, transform.position.y, 0), Quaternion.identity);
 				Rigidbody2D rb = spawned.GetComponent<Rigidbody2D>();
 
 				float angle = Random.Range(-spawnAngle, spawnAngle)+90;
@@ -55,9 +56,11 @@ public class Head : MonoBehaviour {
 				}
 
 				Game.scores[part.player]++;
+				GetComponent<AudioSource>().Play();
 
 				if (Game.scores[part.player] >= blueBattery.Length) {
-					//End Game
+					Game.winner = part.player;
+					SceneManager.LoadScene("End");
 				}
 
 				if (respawnParts) {
